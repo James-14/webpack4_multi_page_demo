@@ -1,2 +1,0 @@
-# webpack4_multi_page_demo
-基于webpack实现多html页面开发框架

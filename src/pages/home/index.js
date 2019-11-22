@@ -1,13 +1,17 @@
+import "./index.scss";
+import testImg from "../../assets/img/test.jpeg";
 
-  import './index.scss'
-  
-  function component() {
-    var element = document.createElement('div');
+const component=()=>{
+  var element = document.createElement("div");
 
-    element.innerHTML = "hello home";
-    element.classList.add('hello');
+  element.innerHTML = "hello home";
+  element.classList.add("hello");
 
-    return element;
-  }
+  var test = new Image();
+  test.src = testImg;
+  element.appendChild(test);
 
-  document.body.appendChild(component());
+  return element;
+}
+
+document.body.appendChild(component());
