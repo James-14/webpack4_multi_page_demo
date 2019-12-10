@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "cross-env webpack --mode=production",
+    "dev": "cross-env webpack-dev-server --mode=development  --config webpack.dev.conf.js"
   },
   "repository": {
     "type": "git",
@@ -19,8 +20,12 @@
   },
   "homepage": "https://github.com/Blubiubiu/webpack4_mpa_demo#readme",
   "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
     "autoprefixer": "^9.7.2",
+    "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
+    "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "html-webpack-plugin": "^3.2.0",
@@ -31,7 +36,9 @@
     "style-loader": "^1.0.0",
     "url-loader": "^2.3.0",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-merge": "^4.2.2"
   },
   "dependencies": {
     "file-loader": "^4.3.0"

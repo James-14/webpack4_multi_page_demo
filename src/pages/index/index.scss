@@ -1,9 +1,9 @@
 .hello {
-    color: red;
+    color: blue($color: #000000);
   }
 body{
     height: 200px;
-    background-color: red;
+    background-color: blue;
     display: flex;
     border-radius: 5px;
 }

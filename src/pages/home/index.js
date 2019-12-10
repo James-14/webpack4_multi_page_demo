@@ -1,5 +1,6 @@
 import "./index.scss";
 import testImg from "../../assets/img/test.jpeg";
+import {printCommon}  from  '../../assets/js/common.js';
 
 const component=()=>{
   var element = document.createElement("div");
@@ -13,5 +14,7 @@ const component=()=>{
 
   return element;
 }
+
+printCommon();
 
 document.body.appendChild(component());

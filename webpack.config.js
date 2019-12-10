@@ -16,9 +16,17 @@ function getEntry() {
 				end = name.length - 3;
             let n = name.slice(start, end);
             let key = n.slice(0, n.lastIndexOf('/')); //保存各个组件的入口
-            // console.log(key);
+
+            //如果key已经有了，对应的index.js入口文件也有了，不要再重新设置入口
+            if(entry.hasOwnProperty(key)){
+                if(entry[key].indexOf("index.js")>-1){
+                    return
+                }
+            }
+
 			entry[key] = name;
-		});
+        });
+        
 	return entry;
 };
 
@@ -38,6 +46,13 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/, //不包含node_modules、bower_components
+                use: {
+                  loader: 'babel-loader',
+                }
+            },
             {
                 test: /\.(css|scss|sass)$/,
                 use: extractTextPlugin.extract({
@@ -63,6 +78,26 @@ module.exports = {
             }
         ]
     },
+    // 提取公共代码
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				vendor: {   // 抽离第三方插件
+					test: /node_modules/,   // 指定是node_modules下的第三方包
+					chunks: 'initial',
+					name: 'vendor',  // 打包后的文件名，任意命名    
+					// 设置优先级，防止和自定义的公共代码提取时被覆盖，不进行打包
+					priority: 10
+				},
+				utils: { // 抽离自己写的公共代码，common这个名字可以随意起
+					chunks: 'initial',
+					name: 'common',  // 任意命名
+					minSize: 0,    // 只要超出0字节就生成一个新包
+					minChunks: 2
+				}
+			}
+		}
+	},
     plugins: [
         // 删除文件 保留新文件
         new CleanWebpackPlugin(),
@@ -70,14 +105,7 @@ module.exports = {
             // filename: 'css/[name].[hash:8].min.css',
             filename: path.posix.join('assets', '/css/[name].[hash:8].min.css'),
         }),
-        // new HtmlWebpackPlugin({
-        //     title: '多页面开发框架',
-        //     template: './src/pages/index/index.html', // 源模板文件
-        //     filename: './index/index.html', // 输出文件【注意：这里的根路径是module.exports.output.path】
-        //     showErrors: true,
-        //     inject: 'true',          //所有JavaScript资源插入到body元素的底部
-        //     chunks: ["common", 'index'] //配置写入哪些js和css
-        // }),
+        
         // new HtmlWebpackPlugin({
         //     title: '多页面开发框架',
         //     template: './src/pages/home/index.html', // 源模板文件
@@ -101,10 +129,11 @@ let getHtmlConfig = function (name, chunks) {
 		template: _template,
 		filename: _filename,
 		// favicon: './favicon.ico',
-		// title: title,
+        // title: title,
+        showErrors: true,
 		inject: true, //设置为true插入的元素放入body元素的底部
 		hash: true, //开启hash  ?[hash]
-		chunks: chunks,
+        chunks: chunks,
 		minify: process.env.NODE_ENV === "development" ? false : {
 			removeComments: true, //移除HTML中的注释
 			collapseWhitespace: true, //折叠空白区域 也就是压缩代码
