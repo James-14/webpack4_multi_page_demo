@@ -4,6 +4,8 @@ const glob = require("glob");
 const extractTextPlugin = require("extract-text-webpack-plugin");
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+//静态资源输出
+const copyWebpackPlugin = require("copy-webpack-plugin");
 
 
 //读取所有.js文件,动态设置多入口
@@ -39,7 +41,7 @@ module.exports = {
     entry:getEntry(),
     output: {
         //__dirname node.js的一个全局环境变量,用于指向当前执行脚本（dirname.js）所在的目录路径，而且是绝对路径
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '../dist'),
         // 多入口打包后的文件名
         publicPath: '/',
         filename: 'assets/js/[name].[hash:8].js',
@@ -84,7 +86,7 @@ module.exports = {
 			cacheGroups: {
 				vendor: {   // 抽离第三方插件
 					test: /node_modules/,   // 指定是node_modules下的第三方包
-					chunks: 'initial',
+					chunks: 'initial', // 拆分模块的范围
 					name: 'vendor',  // 打包后的文件名，任意命名    
 					// 设置优先级，防止和自定义的公共代码提取时被覆盖，不进行打包
 					priority: 10
@@ -93,11 +95,14 @@ module.exports = {
 					chunks: 'initial',
 					name: 'common',  // 任意命名
 					minSize: 0,    // 只要超出0字节就生成一个新包
-					minChunks: 2
+					minChunks: 2   //
 				}
 			}
 		}
-	},
+    },
+    externals: {
+        jquery : 'window.jQuery'
+    },
     plugins: [
         // 删除文件 保留新文件
         new CleanWebpackPlugin(),
@@ -105,6 +110,12 @@ module.exports = {
             // filename: 'css/[name].[hash:8].min.css',
             filename: path.posix.join('assets', '/css/[name].[hash:8].min.css'),
         }),
+        //拷贝不进行打包的第三方库
+		new copyWebpackPlugin([{
+			from: path.resolve(__dirname, "../src/assets/lib"),
+			to: './assets/lib',
+			ignore: ['.*']
+		}]),
         
         // new HtmlWebpackPlugin({
         //     title: '多页面开发框架',
