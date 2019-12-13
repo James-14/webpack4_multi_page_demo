@@ -77,7 +77,12 @@ module.exports = {
                         }
                     }
                 ]
-            }
+            },
+            {
+                test: /\.html$/,
+                // html中的img标签
+                use: ["html-withimg-loader"]
+            },
         ]
     },
     // 提取公共代码

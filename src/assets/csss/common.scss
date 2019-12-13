@@ -1,0 +1,23 @@
+
+/* 通用重定义样式  开始 */
+body,
+dd,
+dl,
+dt,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+input,
+ol,
+p,
+textarea,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+@import "./header.scss";
